@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+import "./styles.css";
 
 const Item = (props) => (
   <li
@@ -89,7 +89,10 @@ class App extends React.Component {
   };
 
   handleRemove = (item) => {
-
+    const removeItem = this.state.list.filter(
+      (element) => element.id !== item.id
+    );
+    this.setState({ list: removeItem });
   };
 
   render() {
