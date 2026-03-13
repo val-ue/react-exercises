@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+import "./styles.css";
 
 const Item = (props) => (
   <li
@@ -43,6 +43,7 @@ class Form extends React.Component {
     this.setState({ inputValue: e.target.value });
   };
   handleSubmit = (e) => {
+    console.log("submitted");
     e.preventDefault();
     const value = this.state.inputValue;
 
@@ -52,6 +53,7 @@ class Form extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
+        {/*<input onChange={this.handleChange} value={this.state.inputValue} />*/}
         <input
           data-testid="add-todo"
           onChange={this.handleChange}
