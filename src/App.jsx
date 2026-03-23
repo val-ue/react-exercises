@@ -38,10 +38,16 @@ const List = (props) => (
 class Form extends React.Component {
   state = {
     inputValue: "",
+    filterInputValue: "",
   };
   handleChange = (e) => {
     this.setState({ inputValue: e.target.value });
   };
+
+  handleFilter = (e) => {
+    this.setState({ filterInputValue: e.target.value });
+  };
+
   handleSubmit = (e) => {
     console.log("submitted");
     e.preventDefault();
@@ -52,14 +58,20 @@ class Form extends React.Component {
   };
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        {/*<input onChange={this.handleChange} value={this.state.inputValue} />*/}
+      <>
+        <form onSubmit={this.handleSubmit}>
+          <input
+            data-testid="add-todo"
+            onChange={this.handleChange}
+            value={this.state.inputValue}
+          />
+        </form>
+
         <input
-          data-testid="add-todo"
-          onChange={this.handleChange}
-          value={this.state.inputValue}
+          onChange={this.handleFilter}
+          value={this.state.filterInputValue}
         />
-      </form>
+      </>
     );
   }
 }
