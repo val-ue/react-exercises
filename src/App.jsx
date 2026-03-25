@@ -1,128 +1,57 @@
 import React from "react";
 import "./styles.css";
 
-const Item = (props) => (
-  <li
-    data-testid="todo-item"
-    className={props.item.completed ? "item-completed" : ""}
-  >
-    {props.item.value}
-    <button
-      data-testid="toggle-button"
-      onClick={() => props.handleToggle(props.item)}
-    >
-      Toggle
-    </button>
-    <button
-      data-testid="delete-button"
-      onClick={() => props.handleRemove(props.item)}
-    >
-      Remove
-    </button>
-  </li>
-);
+class Counter extends React.Component {
 
-const List = (props) => (
-  <ul data-testid="todo-list">
-    {props.list.map((item) => (
-      <Item
-        key={item.id}
-        item={item}
-        handleToggle={props.handleToggle}
-        handleRemove={props.handleRemove}
-      />
-    ))}
-  </ul>
-);
 
-class Form extends React.Component {
-  state = {
-    inputValue: "",
-  };
-  handleChange = (e) => {
-    this.setState({ inputValue: e.target.value });
-  };
-
-  handleSubmit = (e) => {
-    console.log("submitted");
-    e.preventDefault();
-    const value = this.state.inputValue;
-
-    this.setState({ inputValue: "" });
-    this.props.handleSubmit(value);
-  };
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input
-          data-testid="add-todo"
-          onChange={this.handleChange}
-          value={this.state.inputValue}
-        />
-      </form>
+      <div>
+        {this.props.defaultCounterValue}
+        <button onClick={this.handleClick}>increment</button>
+      </div>
     );
   }
 }
 
 class App extends React.Component {
   state = {
-    list: [],
-    filterValue: "",
+    counter: this.props.defaultCounterValue,
+    counters: [
+      { defaultCounterValue: 5, increment: 5 },
+      { defaultCounterValue: 15, increment: 27 },
+      { defaultCounterValue: 25, increment: 3 },
+      { defaultCounterValue: 35 },
+    ],
   };
 
-  handleFilterUpdate = (value) => {
-    this.setState({ filterValue: value });
-  };
-
-  handleSubmit = (value) => {
-    const item = {
-      value,
-      completed: false,
-      id: `${Math.random()}-${Math.random()}`,
-    };
-    const newList = [...this.state.list, item];
-    this.setState({ list: newList });
-  };
-
-  handleToggle = (item) => {
-    const newList = this.state.list.map((element) => {
-      if (element.id === item.id) {
-        element.completed = !element.completed;
-      }
-      return element;
-    });
-    this.setState({ list: newList });
-  };
-
-  handleRemove = (item) => {
-    const removeItem = this.state.list.filter(
-      (element) => element.id !== item.id
-    );
-    this.setState({ list: removeItem });
+  handleClick = () => {
+    this.setState({ counter: this.state.counter + increment });
   };
 
   render() {
-    const filteredList = this.state.list.filter((element) => {
-      return element.value.includes(this.state.filterValue);
-    });
-
     return (
+      //map it here
       <div className="App">
-        <Form
-          handleSubmit={this.handleSubmit}
-          handleFilterUpdate={this.handleFilterUpdate}
-        />
-
-        <input
-          onChange={(e) => this.handleFilterUpdate(e.target.value)}
-          value={this.state.filterValue}
-        />
-
-        <List
-          list={filteredList}
-          handleToggle={this.handleToggle}
-          handleRemove={this.handleRemove}
-        />
+        {this.state.counters.map((counter) => {
+          if (!counter.increment) {
+            counter.increment = 1;
+            return (
+              <Counter
+                defaultCounterValue={this.state.defaultCounterValue}
+                increment={this.state.increment}
+                onClick = 
+              />
+            );
+          } else {
+            return (
+              <Counter
+                defaultCounterValue={this.state.defaultCounterValue}
+                increment={this.state.increment}
+              />
+            );
+          }
+        })}
       </div>
     );
   }
