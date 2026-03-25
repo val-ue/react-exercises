@@ -38,14 +38,9 @@ const List = (props) => (
 class Form extends React.Component {
   state = {
     inputValue: "",
-    filterInputValue: "",
   };
   handleChange = (e) => {
     this.setState({ inputValue: e.target.value });
-  };
-
-  handleFilter = (e) => {
-    this.setState({ filterInputValue: e.target.value });
   };
 
   handleSubmit = (e) => {
@@ -58,20 +53,13 @@ class Form extends React.Component {
   };
   render() {
     return (
-      <>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            data-testid="add-todo"
-            onChange={this.handleChange}
-            value={this.state.inputValue}
-          />
-        </form>
-
+      <form onSubmit={this.handleSubmit}>
         <input
-          onChange={this.handleFilter}
-          value={this.state.filterInputValue}
+          data-testid="add-todo"
+          onChange={this.handleChange}
+          value={this.state.inputValue}
         />
-      </>
+      </form>
     );
   }
 }
@@ -79,7 +67,11 @@ class Form extends React.Component {
 class App extends React.Component {
   state = {
     list: [],
-    value: "",
+    filterValue: "",
+  };
+
+  handleFilterUpdate = (value) => {
+    this.setState({ filterValue: value });
   };
 
   handleSubmit = (value) => {
@@ -110,11 +102,24 @@ class App extends React.Component {
   };
 
   render() {
+    const filteredList = this.state.list.filter((element) => {
+      return element.value.includes(this.state.filterValue);
+    });
+
     return (
       <div className="App">
-        <Form handleSubmit={this.handleSubmit} />
+        <Form
+          handleSubmit={this.handleSubmit}
+          handleFilterUpdate={this.handleFilterUpdate}
+        />
+
+        <input
+          onChange={(e) => this.handleFilterUpdate(e.target.value)}
+          value={this.state.filterValue}
+        />
+
         <List
-          list={this.state.list}
+          list={filteredList}
           handleToggle={this.handleToggle}
           handleRemove={this.handleRemove}
         />
