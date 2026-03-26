@@ -2,12 +2,20 @@ import React from "react";
 import "./styles.css";
 
 class Counter extends React.Component {
+  state = {
+    count: this.props.defaultCounterValue,
+  };
 
+  handleClick = () => {
+    this.setState({
+      count: this.state.count + this.props.increment,
+    });
+  };
 
   render() {
     return (
       <div>
-        {this.props.defaultCounterValue}
+        {this.state.count}
         <button onClick={this.handleClick}>increment</button>
       </div>
     );
@@ -16,7 +24,6 @@ class Counter extends React.Component {
 
 class App extends React.Component {
   state = {
-    counter: this.props.defaultCounterValue,
     counters: [
       { defaultCounterValue: 5, increment: 5 },
       { defaultCounterValue: 15, increment: 27 },
@@ -25,32 +32,17 @@ class App extends React.Component {
     ],
   };
 
-  handleClick = () => {
-    this.setState({ counter: this.state.counter + increment });
-  };
-
   render() {
     return (
-      //map it here
       <div className="App">
-        {this.state.counters.map((counter) => {
-          if (!counter.increment) {
-            counter.increment = 1;
-            return (
-              <Counter
-                defaultCounterValue={this.state.defaultCounterValue}
-                increment={this.state.increment}
-                onClick = 
-              />
-            );
-          } else {
-            return (
-              <Counter
-                defaultCounterValue={this.state.defaultCounterValue}
-                increment={this.state.increment}
-              />
-            );
-          }
+        {this.state.counters.map((element, index) => {
+          return (
+            <Counter
+              key={index}
+              defaultCounterValue={element.defaultCounterValue}
+              increment={element.increment || 1}
+            />
+          );
         })}
       </div>
     );
