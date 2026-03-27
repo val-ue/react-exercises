@@ -22,6 +22,22 @@ class Counter extends React.Component {
   }
 }
 
+class SortButton extends React.Component {
+  state = {};
+
+  handleClick = () => {
+    console.log(this.props.counters);
+  };
+
+  render() {
+    return (
+      <div>
+        <button onClick={this.handleClick}>Sort</button>
+      </div>
+    );
+  }
+}
+
 class App extends React.Component {
   state = {
     counters: [
@@ -44,6 +60,8 @@ class App extends React.Component {
             />
           );
         })}
+
+        <SortButton counters={this.state.counters} />
       </div>
     );
   }
