@@ -1,86 +1,148 @@
 import React from "react";
 import "./styles.css";
 
-class Counter extends React.Component {
-  handleClick = () => {
-    this.props.onIncrement(this.props.index, this.props.increment);
+const Item = (props) => (
+
+  handlePriority = () => {
+
   };
 
-  render() {
-    return (
-      <div>
-        {this.props.count}
-        <button onClick={this.handleClick}>increment</button>
-      </div>
-    );
-  }
-}
+  <li
+    data-testid="todo-item"
+    className={props.item.completed ? "item-completed" : ""}
+  >
+    {props.item.value}
+    <button
+      data-testid="toggle-button"
+      onClick={() => props.handleToggle(props.item)}
+    >
+      Toggle
+    </button>
+    <button
+      data-testid="delete-button"
+      onClick={() => props.handleRemove(props.item)}
+    >
+      Remove
+    </button>
+    <input
+      type="number"
+      onChange={this.handlePriority()}
+      id="priority"
+      name="priority"
+      min="1"
+      max="5"
+    />
+    //on change, it updates App so its priotity value matches the imput value
+    //remember, dont change the original data //so, on change, App will update
+    //the item's priority value //and set the state to the new list
+  </li>
+);
 
-class SortButton extends React.Component {
-  handleClick = () => {
-    this.props.onClick();
+const List = (props) => (
+  <ul data-testid="todo-list">
+    {props.list.map((item) => (
+      <Item
+        key={item.id}
+        item={item}
+        handleToggle={props.handleToggle}
+        handleRemove={props.handleRemove}
+      />
+    ))}
+  </ul>
+);
+
+class Form extends React.Component {
+  state = {
+    inputValue: "",
+  };
+  handleChange = (e) => {
+    this.setState({ inputValue: e.target.value });
   };
 
+  handleSubmit = (e) => {
+    console.log("submitted");
+    e.preventDefault();
+    const value = this.state.inputValue;
+
+    this.setState({ inputValue: "" });
+    this.props.handleSubmit(value);
+  };
   render() {
     return (
-      <div>
-        <button onClick={this.handleClick}>Sort</button>
-      </div>
+      <form onSubmit={this.handleSubmit}>
+        <input
+          data-testid="add-todo"
+          onChange={this.handleChange}
+          value={this.state.inputValue}
+        />
+      </form>
     );
   }
 }
 
 class App extends React.Component {
   state = {
-    counters: [
-      { count: 5, increment: 5 },
-      { count: 15, increment: 27 },
-      { count: 25, increment: 3 },
-      { count: 35 },
-    ],
+    list: [],
+    filterValue: "",
   };
 
-  handleSort = () => {
-    const newCounters = [...this.state.counters];
-    newCounters.sort((a, b) => b.count - a.count);
-    this.setState({
-      counters: newCounters,
-    });
+  handleFilterUpdate = (value) => {
+    this.setState({ filterValue: value });
   };
 
-  onIncrement = (index, increment = 1) => {
-    const newCounters = this.state.counters.map((counter, counterIndex) => {
-      if (counterIndex !== index) {
-        return counter;
+  handleSubmit = (value) => {
+    const item = {
+      value,
+      completed: false,
+      id: `${Math.random()}-${Math.random()}`,
+    };
+    const newList = [...this.state.list, item];
+    this.setState({ list: newList });
+  };
+
+  handleToggle = (item) => {
+    const newList = this.state.list.map((element) => {
+      if (element.id === item.id) {
+        element.completed = !element.completed;
       }
-      return {
-        ...counter,
-        count: counter.count + increment,
-      };
+      return element;
     });
-
-    this.setState({
-      counters: newCounters,
-    });
+    this.setState({ list: newList });
   };
+
+  handleRemove = (item) => {
+    const removeItem = this.state.list.filter(
+      (element) => element.id !== item.id
+    );
+    this.setState({ list: removeItem });
+  };
+
+  handleSort = (item) => {};
 
   render() {
+    const filteredList = this.state.list.filter((element) => {
+      return element.value.includes(this.state.filterValue);
+    });
+
     return (
       <div className="App">
-        {this.state.counters.map((element, index) => {
-          return (
-            <Counter
-              key={index}
-              count={element.count}
-              increment={element.increment}
-              counters={this.state.counters}
-              onIncrement={this.onIncrement}
-              index={index}
-            />
-          );
-        })}
+        <Form
+          handleSubmit={this.handleSubmit}
+          handleFilterUpdate={this.handleFilterUpdate}
+        />
 
-        <SortButton counters={this.state.counters} onClick={this.handleSort} />
+        <input
+          onChange={(e) => this.handleFilterUpdate(e.target.value)}
+          value={this.state.filterValue}
+        />
+
+        <List
+          list={filteredList}
+          handleToggle={this.handleToggle}
+          handleRemove={this.handleRemove}
+        />
+
+        <button onClick={this.handleSort}>Sort</button>
       </div>
     );
   }
