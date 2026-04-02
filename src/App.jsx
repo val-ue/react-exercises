@@ -2,11 +2,6 @@ import React from "react";
 import "./styles.css";
 
 const Item = (props) => (
-
-  handlePriority = () => {
-
-  };
-
   <li
     data-testid="todo-item"
     className={props.item.completed ? "item-completed" : ""}
@@ -26,15 +21,12 @@ const Item = (props) => (
     </button>
     <input
       type="number"
-      onChange={this.handlePriority()}
+      onChange={(e) => props.handlePriority(props.item, e.target.value)}
       id="priority"
       name="priority"
       min="1"
       max="5"
     />
-    //on change, it updates App so its priotity value matches the imput value
-    //remember, dont change the original data //so, on change, App will update
-    //the item's priority value //and set the state to the new list
   </li>
 );
 
@@ -46,6 +38,7 @@ const List = (props) => (
         item={item}
         handleToggle={props.handleToggle}
         handleRemove={props.handleRemove}
+        handlePriority={props.handlePriority}
       />
     ))}
   </ul>
@@ -86,6 +79,19 @@ class App extends React.Component {
     filterValue: "",
   };
 
+  handlePriority = (item, value) => {
+    const newList = this.state.list.map((element) => {
+      if (element.id === item.id) {
+        return { ...element, priority: Number(value) };
+      }
+      return element;
+    });
+    this.setState;
+    ({ list: newList });
+  };
+
+  handleSort = (item) => {};
+
   handleFilterUpdate = (value) => {
     this.setState({ filterValue: value });
   };
@@ -117,8 +123,6 @@ class App extends React.Component {
     this.setState({ list: removeItem });
   };
 
-  handleSort = (item) => {};
-
   render() {
     const filteredList = this.state.list.filter((element) => {
       return element.value.includes(this.state.filterValue);
@@ -140,6 +144,7 @@ class App extends React.Component {
           list={filteredList}
           handleToggle={this.handleToggle}
           handleRemove={this.handleRemove}
+          handlePriority={this.handlePriority}
         />
 
         <button onClick={this.handleSort}>Sort</button>
