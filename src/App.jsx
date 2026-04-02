@@ -86,11 +86,14 @@ class App extends React.Component {
       }
       return element;
     });
-    this.setState;
-    ({ list: newList });
+    this.setState({ list: newList });
   };
 
-  handleSort = (item) => {};
+  handleSort = () => {
+    const newList = [...this.state.list];
+    newList.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+    this.setState({ list: newList });
+  };
 
   handleFilterUpdate = (value) => {
     this.setState({ filterValue: value });
