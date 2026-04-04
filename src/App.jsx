@@ -1,7 +1,6 @@
 import React from "react";
 import "./styles.css";
 
-console.clear();
 
 const Item = (props) => (
   <li onClick={() => props.handleClick(props.listItem)}>
@@ -25,7 +24,11 @@ class App extends React.Component {
     const newOuterList = this.state.outerList.map((element) => {
       if (element === listItem) {
         const newElement = { ...element };
-        newElement.subList = this.state.innerList;
+        if (newElement.subList) {
+          delete newElement.subList;
+        } else {
+          newElement.subList = this.state.innerList;
+        }
         return newElement;
       }
       return element;
